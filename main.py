@@ -1,28 +1,10 @@
-from datetime import time
-import matplotlib
 import chart_desciption
 import plotly.express as px
 import streamlit as st
 import pandas as pd
-import numpy as np
+
 import altair as alt
 from plotly import graph_objs as go
-import matplotlib.pyplot as plt
-# pd.set_option('display.max_columns', None)
-
-import matplotlib.pyplot as plt
-from matplotlib.pylab import rcParams
-rcParams['figure.figsize']=20,10
-from keras.models import Sequential
-from keras.layers import LSTM,Dropout,Dense
-from sklearn.preprocessing import MinMaxScaler
-
-from fbprophet import Prophet
-from fbprophet.plot import plot_plotly
-
-# FILE_DIR = pathlib.Path.cwd()
-# data1_co2 = FILE_DIR / 'datasets/owid-co2-data.csv'
-# data2_co2 = FILE_DIR / 'datasets/GCB2020v18_MtCO2_flat.csv'
 
 # set page layout
 st.set_page_config(
