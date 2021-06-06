@@ -1,7 +1,6 @@
-import pathlib
-import time
-
+from datetime import time
 import matplotlib
+import chart_desciption
 import plotly.express as px
 import streamlit as st
 import pandas as pd
@@ -361,14 +360,14 @@ data1_co2 = load_data()
 
 # page layout setting
 st.header('COMPX532A - Final Project')
-st.info("Data Information")
 df = trim_datasets(data1_co2)
 min_y, max_y = get_df_year_mx_mi(df)
 
 # side bar setting
-st.sidebar.header('About the data')
+st.sidebar.header('Setting Option')
 select_year = st.sidebar.slider('Year', min_y, max_y, max_y, 1)
 select_country = st.sidebar.multiselect('Select Country:', df['country'].unique().tolist())
+# st.sidebar.write(len(data1_co2['country'].unique().tolist()))
 
 # filter dataframe by select country
 if len(select_country) > 0:
@@ -381,248 +380,37 @@ df, df_columns_list = control_dataframe(df)
 df_columns_list.pop()
 # add select box of select sector in side bar
 select_co2_sector = st.sidebar.selectbox('Select sector in CO2 Emission', df_columns_list)
+st.sidebar.write('🧠 Created by Andrew Choi. <br>©Copyright reserved.',unsafe_allow_html=True)
+
+st.info(chart_desciption.data_information())
 
 # plot the graph
 st.plotly_chart(get_co2_choropleth_map(df, select_year, select_co2_sector))
-with st.beta_expander("See explanation"):
-     st.write("""
-         The chart above shows some numbers I picked for you.
-         I rolled actual dice for these, so they're *guaranteed* to
-         be random.
-     """)
-     st.image("https://static.streamlit.io/examples/dice.jpg")
+with st.beta_expander("🗺️Choropleth Map Explanation"):
+     st.markdown(chart_desciption.choropleth_map_explanation(), unsafe_allow_html=True)
 
+#explanation of Bar chart
 st.plotly_chart(show_bar_top_low_10(df, select_co2_sector, select_year))
+with st.beta_expander("📊 Top 10/ Lowest 10 Bar chart Explanation"):
+    st.markdown(chart_desciption.top_low_bar_chart_explanation(), unsafe_allow_html=True)
+
+#explanation of Scatter chart
 st.altair_chart(show_scatter_gdp_vs_pop(data1_co2, select_co2_sector, select_year), use_container_width=True)
+with st.beta_expander("🔵🔴 Scatter chart (Relationship among CO2, GDP, Population) Explanation"):
+    st.markdown(chart_desciption.scatter_chart_explanation(), unsafe_allow_html=True)
+
+#explanation of line chart
 st.plotly_chart(show_line_chart(data1_co2), use_container_width=True)
+with st.beta_expander("📈 Line chart (trend/accumulated of CO2 emission) Explanation"):
+    st.markdown(chart_desciption.line_chart_explanation(), unsafe_allow_html=True)
+
+#Animated bar chart
+st.header("Animated Bar chart (shows the volume/change over time)")
 with st.spinner('Please wait, it is generating'):
-    st.plotly_chart(animated_bar(data1_co2, select_co2_sector), use_container_width=True)
+    try:
+        st.plotly_chart(animated_bar(data1_co2, select_co2_sector), use_container_width=True)
+    except:
+        st.error("You have select a sector that no animated graph.")
 
-# LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSTTTTTTTTTTTTTTTTTMMMMMMMMMMMMMMMMMMM
-
-# data1_co2 = data1_co2[data1_co2['country'] == 'World']
-# data1_co2 = data1_co2.reset_index()
-#
-#
-#
-# data = pd.DataFrame(index=range(0,len(data1_co2)),columns=['year','co2'])
-# for i in range(0,len(data)):
-#     data["year"][i]=data1_co2["year"][i]
-#     data["co2"][i]=data1_co2["co2"][i]
-#
-# scaler=MinMaxScaler(feature_range=(0,1))
-# data.index = data.year
-# data.drop("year",axis=1,inplace=True)
-# final_data = data.values
-# # st.write(len(data))
-# train_data=final_data[0:200,:]
-# valid_data=final_data[200:,:]
-# scaler=MinMaxScaler(feature_range=(0,1))
-# scaled_data=scaler.fit_transform(final_data)
-# x_train_data,y_train_data=[],[]
-# for i in range(60,len(train_data)):
-#     x_train_data.append(scaled_data[i-60:i,0])
-#     y_train_data.append(scaled_data[i,0])
-
-# x_train_data, y_train = np.array(x_train_data), np.array(y_train_data)
-# x_train_data = np.reshape(x_train_data, (x_train_data.shape[0], x_train_data.shape[1], 1))
-# lstm_model=Sequential()
-# lstm_model.add(LSTM(units=50,return_sequences=True,input_shape=(np.shape(x_train_data)[1],1)))
-# lstm_model.add(LSTM(units=50))
-# lstm_model.add(Dense(1))
-# model_data=data[len(data)-len(valid_data)-60:].values
-# model_data=model_data.reshape(-1,1)
-# model_data=scaler.transform(model_data)
-#
-# lstm_model.compile(loss='mean_squared_error',optimizer='adam')
-# lstm_model.fit(x_train_data,y_train_data,epochs=1,batch_size=1,verbose=2)
-# X_test=[]
-# for i in range(60,model_data.shape[0]):
-#     X_test.append(model_data[i-60:i,0])
-# X_test=np.array(X_test)
-# X_test=np.reshape(X_test,(X_test.shape[0],X_test.shape[1],1))
-#
-# predicted_stock_price=lstm_model.predict(X_test)
-# predicted_stock_price=scaler.inverse_transform(predicted_stock_price)
-#
-# train_data=data[:200]
-# valid_data=data[200:]
-# valid_data['Predictions']=predicted_stock_price
-# plt.plot(train_data["co2"])
-# st.write(plt.plot(valid_data[['co2',"Predictions"]]))
-
-# #prediction
-# p_years = st.slider("Years of predcition", 1,10)
-# period = p_years * 365
-#
-# select_country = st.selectbox('Select the Country to be display',df_org['country'].unique().tolist())
-#
-# #Forecasting
-# df_train = df_org[df_org['country'] == 'World']
-# df_train = df_train[['year','co2']]
-# df_train = df_train.sort_values(by=['year'])
-
-# df_train = df_train.rename(columns={"year":"ds","co2":"y"})
-# st.dataframe(df_train)
-#
-# m = Prophet()
-# m.fit(df_train)
-# future = m.make_future_dataframe(periods=period)
-#
-# forecast = m.predict(future)
-#
-# st.subheader("Forecast Data")
-# st.dataframe(forecast)
-#
-# st.write("Forecast Data")
-# fig1 = plot_plotly(m, forecast)
-# st.plotly_chart(fig1) #plot the forcast data
-
-# from matplotlib.pylab import rcParams
-# rcParams['figure.figsize']=20,10
-# from keras.models import Sequential
-# from keras.layers import LSTM,Dropout,Dense
-# # from sklearn.preprocessing import MinMaxScaler
-#
-# df_train["year"] = pd.to_datetime(df_train.year, format="%Y")
-# df_train = df_train.reset_index(drop=True)
-#
-# data = pd.DataFrame(index=range(0,len(df_train)),columns=['year','co2'])
-# for i in range(0,len(data)):
-#     data["year"][i]=df_train['year'][i]
-#     data["co2"][i]=df_train["co2"][i]
-#
-# st.write(data.head())
-# st.write(df_train)
-
-# line
-# fig_scatter.add_trace(go.Line(
-#     mode="markers", x=df_sca["population"], y=df_sca["gdp"],
-#     text=df_sca['country'], marker=dict(size=20,colorscale='Viridis')))
-
-
-# df_sum = df_org[['country', 'co2']]
-# df_sum = df_sum.groupby(['country']).sum()
-# st.dataframe(df_sum)
-# import plotly.express as px
-# fig_tree = px.treemap(data_frame=df_sum, values='co2')
-# st.plotly_chart(fig_tree)
-
-# import altair as alt
-# source = df_org
-#
-# selection = alt.selection_multi(fields=['series'], bind='legend')
-#
-# fig_a = alt.Chart(source).mark_area().encode(
-#     alt.X('cumulative_co2', axis=alt.Axis(domain=False, format='%Y', tickSize=0)),
-#     alt.Y('year', stack='center', axis=None),
-#     alt.Color('series:N', scale=alt.Scale(scheme='country')),
-#     opacity=alt.condition(selection, alt.value(1), alt.value(0.2))
-# ).add_selection(
-#     selection
-# )
-# st.altair_chart(fig_a)
-
-# import plotly.express as px
-# df_org = df_org.fillna(0)
-# df_org = df_org[df_org['co2'] > 0]
-#
-# fi_bar = go.Bar(x=df_org["country"][0:10],y=df_org["co2"][0:10], marker=dict(color="co2"), showlegend=True)
-#
-# st.plotly_chart(fi_bar)
-
-
-# import plotly.express as px
-# import plotly.io as pio
-# df1 = pd.read_csv(data1_co2)
-# df = df.drop(df[df.score < 50].index)
-# st.dataframe(df1)
-# df1 = df1[df1['country'] != 'World']
-# df1 = df1.fillna(value=0)
-# df1 = df1.sort_values(by=['co2'], ascending=False)
-# st.write(df1["co2"].max())
-# st.write(df1["co2"].min())
-
-# @st.cache
-# def plot_animated_bar():
-#     fig2 = px.bar(df1, x='co2', y='country', color='country',
-#                   animation_frame='year', animation_group='country', hover_name="country",
-#                   range_x=[-2,21000])
-#     fig2.update_xaxes(rangeslider_visible=True)
-#
-#     fig2.show()
-#     st.plotly_chart(fig2)
-# plot_animated_bar()
-
-# df_year = df1['year'].tolist()
-# df_year = list(dict.fromkeys(df_year))
-# df_year.sort()
-#
-# dict_keys = []
-# index = 1
-# for i in range(len(df_year)):
-#     dict_keys.append(str(index))
-#     index += 1
-#
-# #['one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen',
-# #            'fourteen','fifteen','sixteen','seventeen','eighteen','nineteen','twenty','twentyone','twentytwo',
-# #            'twentythree','twentyfour','twentyfive','twentysix','twentyseven','twentyeight']
-# #
-# # years=[1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,
-# #        2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017]
-# #
-# n_frame={}
-#
-# for y, d in zip(df_year, dict_keys):
-#     dataframe=df1[(df1['year']==y)&(df1['country'])]
-#     dataframe=dataframe.nlargest(n=5,columns=['co2'])
-#     dataframe=dataframe.sort_values(by=['year','co2'])
-#
-#     n_frame[d]=dataframe
-# pd.set_option('display.max_columns', None)
-# # print(dataframe)
-# print(n_frame['1'])
-#
-# fig = go.Figure(
-#     data=[
-#         go.Bar(
-#         x=n_frame['1']['co2'], y=n_frame['1']['country'],orientation='h',
-#         text=n_frame['1']['co2'], texttemplate='%{text:.3s}',
-#         textfont={'size':18}, textposition='inside', insidetextanchor='middle',
-#         width=0.9, marker={'color':n_frame['1']['co2']})
-#     ],
-#     layout=go.Layout(
-#         xaxis=dict(range=[-2, 21000], autorange=False, title=dict(text='co2',font=dict(size=18))),
-#         yaxis=dict(range=[-0.5, 5.5], autorange=False,tickfont=dict(size=14)),
-#         title=dict(text='Top 5 co2',font=dict(size=28),x=0.5,xanchor='center'),
-#         # Add button
-#         updatemenus=[dict(
-#             type="buttons",
-#             buttons=[dict(label="Play",
-#                           method="animate",
-#                           # https://github.com/plotly/plotly.js/blob/master/src/plots/animation_attributes.js
-#                           args=[None,
-#                           {"frame": {"duration": 1000, "redraw": True},
-#                           "transition": {"duration":250,
-#                           "easing": "linear"}}]
-#             )]
-#         )]
-#     ),
-#     frames=[
-#             go.Frame(
-#                 data=[
-#                         go.Bar(x=value['co2'], y=value['country'],
-#                         orientation='h',text=value['co2'],
-#                         marker={'color':value['co2']})
-#                     ],
-#                 layout=go.Layout(
-#                         xaxis=dict(range=[0, 21000], autorange=False),
-#                         yaxis=dict(range=[-0.5, 5.5], autorange=False,tickfont=dict(size=14)),
-#                         title=dict(text='CO2 Top5 over year: '+str(value['year'].values[0]),
-#                         font=dict(size=28))
-#                     )
-#             )
-#         for key, value in n_frame.items()
-#     ]
-# )
-# pio.show(fig)
+with st.beta_expander("🏃‍♂️🏃‍♀️📊Animated Bar chart (change over time) Explanation"):
+    st.markdown(chart_desciption.animated_bar_explanation(), unsafe_allow_html=True)
