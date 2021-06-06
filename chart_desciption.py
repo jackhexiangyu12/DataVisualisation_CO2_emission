@@ -22,7 +22,9 @@ def line_chart_explanation():
        switch to accumulated mode</i>.
        <br><br>
        The trend mode shows the change over years whereas the accumulated mode shows the 
-       speed of CO2 emission over years.
+       speed of CO2 emission over years. From the trend mode, the CO2 emission stayed at stable and low
+       volume emission before 1900. It then slightly increase after then. After 1950, the CO2 emission 
+       upsurged since then which had not declined until present.
        <br><br>
        A time series filter underneath the line chart allows user to zoom into the time range.
        <br><br>
@@ -86,9 +88,10 @@ def project_background():
     project_intro = '''
     Carbon dioxide emission is a primary concern of climate change in the world.
     
-    Most of us understand reducing CO2 emission would avoid the deterioration of global warming. 
-    However, do you how human activities impact CO2 emission and how much was your living place 
-    or other countries contribute the CO2 emission 200 years ago, 100 years ago or 10 years ago?
+    Most of us understand reducing CO2 emission would avoid the deterioration of global 
+    warming. However, do you know how human activities impact CO2 emission and how much 
+    was your living place or other countries contribute the CO2 emission 200 years ago, 
+    100 years ago or 10 years ago?
     
     When we have the historical record, it is time-consuming to mining useful data at the 
     spreadsheet full with a digit and over 23 thousand rows.
