@@ -150,7 +150,7 @@ def animated_bar(dataframe, dataset_column):
 
 # show the bar chart of top 10 / lowest 10
 def show_bar_top_low_10(dataframe, data_column, year):
-    st.header("Which countries are the Top 10 or Lowest 10?")
+    st.subheader("Which countries are the Top 10 or Lowest 10?")
     df = dataframe[dataframe['iso_code'].notnull()]
     df = df[df['iso_code'] != 'OWID_WRL']
     df_top10 = df.nlargest(10, data_column)
@@ -185,7 +185,7 @@ def show_bar_top_low_10(dataframe, data_column, year):
 # scatter graph for GDP vs Population vs CO2 emission
 def show_scatter_gdp_vs_pop(dataframe, data_column, year):
     # plot the scatter chart (GDP vs Population vs Selected category)
-    st.header("Relationship between GDP, Population and CO2 emission")
+    st.subheader("Relationship between GDP, Population and CO2 emission")
     df_gdp_pop_cat = dataframe[['year', 'country', 'iso_code', data_column, 'gdp', 'population']]
     df_gdp_pop_cat = df_gdp_pop_cat[df_gdp_pop_cat['year'] == year]  # filter out the year
     df_gdp_pop_cat = df_gdp_pop_cat[df_gdp_pop_cat['iso_code'].notnull()]  # filter out no iso code area
@@ -211,7 +211,7 @@ def show_scatter_gdp_vs_pop(dataframe, data_column, year):
 # plot the line chart
 def show_line_chart(dataframe):
     list_country = dataframe['country'].unique().tolist()
-    st.header("Time Series of CO2 emission")
+    st.subheader("Time Series of CO2 emission")
     col1, col2 = st.beta_columns(2)
     col1.subheader('Select Country')
     col2.subheader('Select Mode')
@@ -373,7 +373,7 @@ if len(select_country) > 0:
 elif len(select_country) == 0:
     pass
 check_box_show(df)
-st.header("CO2 Emission in the world")
+st.subheader("CO2 Emission in the world")
 df, df_columns_list = control_dataframe(df)
 df_columns_list.pop()
 # add select box of select sector in side bar
@@ -403,7 +403,7 @@ with st.beta_expander("📈 Line chart (trend/accumulated of CO2 emission) Expla
     st.markdown(chart_desciption.line_chart_explanation(), unsafe_allow_html=True)
 
 #Animated bar chart
-st.header("Animated Bar chart (shows the volume/change over time)")
+st.subheader("Animated Bar chart (shows the volume/change over time)")
 with st.spinner('Please wait, it is generating'):
     try:
         st.plotly_chart(animated_bar(data1_co2, select_co2_sector), use_container_width=True)
