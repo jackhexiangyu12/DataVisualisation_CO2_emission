@@ -74,8 +74,29 @@ def choropleth_map_explanation():
 def data_information():
     data_info = '''The data is from \"Our World in Data\" covering CO2 emission at country level.
     It covers over 250 years CO2 emission data with 236 sovereign state (including continents or 
-    special region data). It consists of several sectors of CO2 source including general CO2 emission,
-    oil, gas, cement, trade, flaring, coal and those sectors data derived into cumulative figure, and per capita
-    figure.
+    special region data) which consists of several sectors of CO2 source including general CO2 
+    emission, oil, gas, cement, trade, flaring, coal and those sectors data derived into cumulative 
+    figure, and per capita figure. Data source:
+    
+    https://github.com/owid/co2-data
     '''
     return data_info
+
+def project_background():
+    project_intro = '''
+    Carbon dioxide emission is a primary concern of climate change in the world.
+    
+    Most of us understand reducing CO2 emission would avoid the deterioration of global warming. 
+    However, do you how human activities impact CO2 emission and how much was your living place 
+    or other countries contribute the CO2 emission 200 years ago, 100 years ago or 10 years ago?
+    
+    When we have the historical record, it is time-consuming to mining useful data at the 
+    spreadsheet full with a digit and over 23 thousand rows.
+    
+    The visualisation drives the aforesaid problem by illustrating the annual CO2 emission into 
+    a map-based graph with pointing out the severe and minor 10 countries in a particular year. 
+    In addition, some graphs help to determine the relationship between GDP, Population and CO2 
+    emission and the trend in time series. The last animated bar chart provides a clear view to 
+    watch the annual change of CO2 emission across the different continents.
+    '''
+    return project_intro

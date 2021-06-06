@@ -91,7 +91,7 @@ def get_co2_choropleth_map(dataframe, year, select_sector):
         reversescale=True,
         marker_line_color='darkgray',
         marker_line_width=1,
-        colorbar_title='CO2 <br> in Country',
+        colorbar_title='CO2 <br> million tonnes',
     ))
 
     fig_choropleth.update_layout(
@@ -118,6 +118,16 @@ def get_co2_choropleth_map(dataframe, year, select_sector):
 @st.cache
 def animated_bar(dataframe, dataset_column):
     df_region_area = dataframe[dataframe['iso_code'].isnull()]
+    df_region_area = df_region_area.loc[(df_region_area["country"] != "French Equatorial Africa") &
+                                        (df_region_area["country"] != "French West Africa") &
+                                        (df_region_area["country"] != "Kuwaiti Oil Fires") &
+                                        (df_region_area["country"] != "Leeward Islands") &
+                                        (df_region_area["country"] != "Macao") &
+                                        (df_region_area["country"] != "Micronesia") &
+                                        (df_region_area["country"] != "Panama Canal Zone") &
+                                        (df_region_area["country"] != "Ryukyu Islands") &
+                                        (df_region_area["country"] != "St. Kitts-Nevis-Anguilla")]
+    df_region_area = df_region_area.fillna(0)
     df_region_area = df_region_area.pivot(index='year', columns='country', values=dataset_column)
     # create year as new column, some countries missing year in original datasets
     df_region_area['year'] = df_region_area.index
@@ -343,6 +353,11 @@ data1_co2 = load_data()
 
 # page layout setting
 st.header('COMPX532A - Final Project')
+st.subheader('Purpose of the project')
+st.text(chart_desciption.project_background())
+st.subheader('Data Source Description')
+st.info(chart_desciption.data_information())
+
 df = trim_datasets(data1_co2)
 min_y, max_y = get_df_year_mx_mi(df)
 
@@ -365,7 +380,7 @@ df_columns_list.pop()
 select_co2_sector = st.sidebar.selectbox('Select sector in CO2 Emission', df_columns_list)
 st.sidebar.write('🧠 Created by Andrew Choi. <br>©Copyright reserved.',unsafe_allow_html=True)
 
-st.info(chart_desciption.data_information())
+
 
 # plot the graph
 st.plotly_chart(get_co2_choropleth_map(df, select_year, select_co2_sector))
