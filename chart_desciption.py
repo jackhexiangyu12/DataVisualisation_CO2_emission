@@ -78,7 +78,7 @@ def data_information():
     It covers over 250 years CO2 emission data with 236 sovereign state (including continents or 
     special region data) which consists of several sectors of CO2 source including general CO2 
     emission, oil, gas, cement, trade, flaring, coal and those sectors data derived into cumulative 
-    figure, and per capita figure. Data source:
+    figure, and per capita figure. The data is open access under the Creative Commons BY license. Data source:
     
     https://github.com/owid/co2-data
     '''
