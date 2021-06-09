@@ -43,7 +43,7 @@ def scatter_chart_explanation():
        left bottom corner reflecting that the countries with 
        <b>relatively low GDP and Population contributed small volume of CO2 emission</b>.
        <br><br>
-       The chart will dynamically change if filters of countries and year applied.
+       The chart will dynamically change if filters of sector and year applied.
        </li>
        <br>'''
     return scatter_chart_explain
